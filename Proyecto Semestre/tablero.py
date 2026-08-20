@@ -10,7 +10,11 @@ def verificar_solo_digito(digito):
             digito = input("Caracter no valido, ingrese nuevamente: ")
     return digito
 
+# Funcion que verifica la posicion esta en el tablero
+def verificar_posicion(n):
 
+
+# Main del codigo
 n = verificar_solo_digito(input("Ingrese un numero de casillas: "))
 while n < 6 or n > 12:
     print(f" {n} fuera del rango permitido de casillas")
@@ -31,6 +35,7 @@ for i in range(n - 2, n):
 
 
 turno = 0
+# Simplificar codigo con funcion para el moviento tanto de fichas blancas o negras
 while True:
     bandera_negra = False
     bandera_blanca = False
@@ -40,7 +45,9 @@ while True:
             print(f"---------------- Turno N*{turno}: Fichas Negras ----------------")
             print(tablero)
             print("Seleccione una ficha")
-            # Crear una condicion donde se coloquen cordenadas validas dentro de la matriz           
+
+            # Crear una condicion donde se coloquen cordenadas validas dentro de la matriz    
+                   
             mov_ficha_fila = verificar_solo_digito(input("Ingrese fila: "))
             mov_ficha_columa =  verificar_solo_digito(input("Ingrese columna: "))
             print(f"Cordenadas ficha seleccionada: {mov_ficha_fila},{mov_ficha_columa}")
@@ -54,7 +61,6 @@ while True:
             else:
                 print("Ficha seleccionada no valida para el turno!")
         print("Has salido del ciclo while al seleccionar la correcta!!")
-
     else:
         print(f"---------------- Turno N*{turno}: Fichas Blancas ----------------")
         while not bandera_blanca:   
