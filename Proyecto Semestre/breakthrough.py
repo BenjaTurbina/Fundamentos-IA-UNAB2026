@@ -1,10 +1,16 @@
-#Importacion de la libreria numpy para la creacion de la matriz de juego
+#Importacion de la libreria numpy para la creacion de la matriz de juego y otras necesidades
 import numpy as np
 
 # COSAS QUE VERIFICAR
-    # Condicion de victoria
-    # Moviento de fichas fuera de la matriz, da error
 
+    # Condicion de victoria, que gana blanca o negro !! Listo
+    # Condicion de victoria, que se eliminan todas las fichas contrarias !! Listo
+
+    # Condicion de victoria, que no queden mas movientos disponibles ???
+
+
+    # Moviento de fichas fuera de la matriz, da error !! Solucionado
+    # Se buguea el moviento lateral en el tablero !! Solucionado
 
 # Funcion que verifica que se ingresen solo numeros
 def verificar_solo_digito(digito):
@@ -32,33 +38,36 @@ def cordenada_valida(fila,columna,tablero):
     return (0 <= fila < limite_fila) and (0 <= columna < limite_columna)
 
 # Funcion que verifica la posicion final si es habil para el movimiento
-def verificar_posicion_final(tablero, mov_ficha_fila, mov_ficha_columna, turno, opcion): 
+def verificar_posicion_final(tablero, mov_ficha_fila, mov_ficha_columna, turno, opcion,texto): 
     cordenada = cordenada_valida(mov_ficha_fila,mov_ficha_columna,tablero)
     # Si la cordena se encuentra fuera de los limites
     if not cordenada:
-        print("Cordenada fuera de los limites!!") 
+        print(f"{texto} fuera de los limites!!") 
         return False
     # Obtiene el dato que se encuentra dentro de las cordenas
     casilla = tablero[mov_ficha_fila][mov_ficha_columna]
-    # Verificacion para seleccion de ficha
+
+    # Verificacion de que se tome la ficha correspondiente segun el turno
     if opcion == 1: 
         if turno % 2 == 1: # negro
             if casilla == "N":
                 return True
             else:
-                print(f"Ficha seleccionada no valida para el turno {turno} !negro!")
+                print("Solamente puede mover fichas negras")
                 return False
         else: # blanco
             if casilla == "B":
                 return True
             else:
-                print(f"Ficha seleccionada no valida para el turno {turno} !blanco!")
+                print("Solamente puede mover fichas blancas")
                 return False
-    # Verifiacion para moviento de casillas 
+            
+    # Verifiacion para moviento de casillas
     else:
         if turno % 2 == 1: #negro
-            #condicion  ocupada por el mismo color
+            #condicion ocupada por el mismo color
             if casilla == "N":
+                print("Casilla ocupada por ficha del mismo color!!")
                 return False
             #pieza ocupada por otro color o vacia
             elif (casilla =="*" or casilla =="B") :
@@ -66,72 +75,108 @@ def verificar_posicion_final(tablero, mov_ficha_fila, mov_ficha_columna, turno, 
         else: #blanco
             #condicion ocupada por el mismo color
             if casilla == "B":
+                print("Casilla ocupada por ficha del mismo color!!")
                 return False
             #pieza ocupada por otro color o vacia
             elif (casilla == "*" or casilla== "N"):
                 return True
 
+# Funcion para revisar si se cumple una condicion de victoria
+def condicion_victoria(tablero):
+    #  Varibles para la condicion de eliminacion, cuenta cuantas fichas quedan de cada una
+    restante_b = np.count_nonzero(tablero == "B")
+    restante_n = np.count_nonzero(tablero == "N")
+
+    # Condicion si uno de los colores es eliminado por el otro
+    if restante_b == 0:
+        print("\nGanan las fichas Negras por eliminacion")
+        return True
+    if restante_n == 0:
+        print("\nGanan las fichas Blancas por eliminacion")
+        return True
+        
+    # Condicion si se llega al otro lado contrario
+    if "N" in tablero[0]:
+        print("\nGanan las fichas Negras por llegar a la meta")
+        return True
+    if "B" in tablero[-1]:
+        print("\nGanan las fichas Blancas por llegar a la meta")
+        return True
+
+    # Retorna falso si nadie a ganado todavia
+    return False
+
 
 # funcion de movimiento fichas
 def mover_ficha(tablero,fila,columna,ficha,turno):
-    # return que indique si los 3 movientos son validos, sino que seleccione otra ficha
-    n =len((tablero))
+    # If donde el moviento depende de la ficha seleccionada
     if ficha == "N":
         direccion = -1
     else:
         direccion = 1
-    print ("1. mover izquierda ")
-    print ("2. recto")
-    print ("3. mover derecha")
 
+    print(f"---- FICHA SELECCIONADA: ({fila},{columna}) ----")
+    # Opciones de movimiento
+    print ("1. Mover izquierda ")
+    print ("2. Recto")
+    print ("3. Mover derecha")
+    print ("4. Seleccionar otra ficha")
+
+    # Verificacion de opcion valida 
     opcion = verificar_solo_digito(input("Ingrese una opcion: "))
-    while opcion not in [1,2,3] and (verificar_posicion_final(tablero,fila -1,columna + direccion,turno,2) or verificar_posicion_final(tablero,fila,columna + direccion,turno,2) or verificar_posicion_final(tablero,fila +1,columna + direccion,turno,2)):
+    while opcion not in [1,2,3,4 ]:
         print("Opcion no valida")
-        opcion = verificar_solo_digito(input("Opcion invalida, ingrese 1, 2, 3: "))
+        opcion = verificar_solo_digito(input("Opcion invalida, ingrese 1, 2, 3, 4 : "))
+
+    # Ficha mueve a la izquierda
     if opcion == 1:
         nueva_fila, nueva_columna =  fila + direccion, columna - 1 
+    # Ficha mueve recto
     elif opcion == 2:
         nueva_fila, nueva_columna =  fila + direccion, columna 
+    # Ficha mueve a la derecha
     elif opcion == 3:
         nueva_fila, nueva_columna =  fila + direccion, columna + 1
-    else:
-        print("Fallo")
-    if nueva_fila < 0 or nueva_fila >= n or nueva_columna < 0 or nueva_columna >= n:
-        print("Movimiento no valido, fuera de los limites del tablero")
+    # Se selecciona otra ficha
+    elif opcion == 4:
+        return False
 
+    moviento_valido = verificar_posicion_final(tablero,nueva_fila,nueva_columna,turno,2,"Movimiento")
+    # Verificacion de si el movimiento es valido
+    if not moviento_valido:
+        return False
+
+    # Se obtiene el dato que esta en la casilla que se quiere mover 
     destino = tablero[nueva_fila][nueva_columna]
 
     if opcion == 2:
         if destino != "*":
             print("Movimiento no valido, casilla ocupada")
             return False
-    else:
-        if destino == ficha:
-            print("no se puede capturar una ficha propia, movimiento no valido")
-            return False
+
+    # Se aplica el cambio en el tablero 
     tablero[fila][columna] = "*"
     tablero[nueva_fila][nueva_columna] = ficha
-    return True
-    
 
+    # Si la condicon de victoria retorna verdadero, se retorna juego terminado
+    if condicion_victoria(tablero):
+        return "JUEGO TERMINADO"
 
-
-    
-    
+    # Se continua con el siguiente turno
+    return "SIGUIENTE TURNO"
 
 # Creacion de tablero (matriz) NxN 
-
-n = verificar_solo_digito(input("Ingrese un numero de casillas: "))
+n = verificar_solo_digito(input("Ingrese un numero de casillas (6 MIN/12 MAX): "))
 while n < 6 or n > 12:
     print(f" {n} fuera del rango permitido de casillas")
     n = verificar_solo_digito(input("Ingrese la cantidad de casillas: "))
 
-
 tablero = crear_tablero(n)
-
 turno = 0
-# Simplificar codigo con funcion para el moviento tanto de fichas blancas o negras
-while True:
+juego_terminado = False
+
+# Se inicializa el juego
+while not juego_terminado:
     bandera_negra = False
     bandera_blanca = False
     turno += 1
@@ -143,17 +188,26 @@ while True:
             # Se pide la fila y columna la ficha a mover
             n_fila = verificar_solo_digito(input("Ingresa la fila: "))
             n_columna = verificar_solo_digito(input("Ingrese la columna: "))
+
             # Se verifica que la posicion sea valida y la ficha correspondiente al turno
-            while not verificar_posicion_final(tablero,n_fila,n_columna,turno,1):
+            while not verificar_posicion_final(tablero,n_fila,n_columna,turno,1,"Casilla"):
                 n_fila = verificar_solo_digito(input("Ingresa la fila: "))
                 n_columna = verificar_solo_digito(input("Ingrese la columna: "))
-            # Se procede a mover la ficha selecciona
-            if mover_ficha(tablero,n_fila,n_columna,tablero[n_fila][n_columna],turno):
-                bandera_negra = True
-            else:
-                print("Hay un error en el moviento")
-            #actualizar tablero
 
+            # Se procede a mover la ficha selecciona
+            resultado = mover_ficha(tablero,n_fila,n_columna,tablero[n_fila][n_columna],turno)
+
+            # Si resultado retorna juego termiando, se finaliza la partida
+            if resultado == "JUEGO TERMINADO":
+                bandera_negra = True
+                juego_terminado = True
+
+            # Si el moviento es valido, se continua con el siguiente turno
+            elif resultado == "SIGUIENTE TURNO":
+                bandera_negra = True
+            else: 
+                print("Seleccione otra ficha")
+            
     else:
         print(f"---------------- Turno N*{turno}: Fichas Blancas ----------------")
         while not bandera_blanca:   
@@ -161,12 +215,18 @@ while True:
             print("Seleccione una ficha")           
             n_fila = verificar_solo_digito(input("Ingresa la fila: "))
             n_columna = verificar_solo_digito(input("Ingrese la columna: "))
-            while not verificar_posicion_final(tablero,n_fila,n_columna,turno,1):
+            while not verificar_posicion_final(tablero,n_fila,n_columna,turno,1,"Casilla"):
                 n_fila = verificar_solo_digito(input("Ingresa la fila: "))
                 n_columna = verificar_solo_digito(input("Ingrese la columna: "))
-            # Se procede a mover la ficha selecciona
-            if mover_ficha(tablero,n_fila,n_columna,tablero[n_fila][n_columna],turno):
+            resultado = mover_ficha(tablero,n_fila,n_columna,tablero[n_fila][n_columna],turno)
+            if resultado == "JUEGO TERMINADO":
                 bandera_blanca = True
-            else:
-                print("Hay un error en el moviento")
-            #actualizar tablero
+                juego_terminado = True
+            elif resultado == "SIGUIENTE TURNO":
+                bandera_blanca = True
+            else: 
+                print("Seleccione otra ficha")
+
+print(f"\n--------- Partida terminada en turno {turno} ----------")
+print(tablero)
+print("Juego Finalizado!!!")
