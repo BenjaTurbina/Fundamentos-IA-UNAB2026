@@ -225,61 +225,64 @@ def evaluar_tablero(tablero):
     return puntaje
 
 
-def alfaBetaLimitada(lista_mov,LeTocaIA,d,alfa,beta,tablero,color):
-    casillas_x,casillas_y = tablero.shape
-    ganador = condicion_victoria(tablero)
-    if ganador == "B":
-        return 1000
-    elif ganador == "N":
-        return -1000
-
-    movimientos = generar_movimientos(tablero, color)
-        
-    if not movimientos:
-        if color == "B":
-            return -1000
-        else:
+def alfaBetaLimitada(moviento,LeTocaIA,d,alfa,beta,tablero,color):
+    casillas_x,casillas_y = tablero.shape 
+    if color == "B":
+        ganador = condicion_victoria(tablero) #Devuelve N o B dependendiendo quien gana, sino devuelve un NONE
+        if ganador == "B":
             return 1000
-  
-    if d == 0:
-        return evaluar_tablero(tablero)
+        elif ganador == "N":
+            return -1000
+        else: 
+            movimientos = generar_movimientos(tablero, color)
+                
+            if not movimientos:
+                if color == "B":
+                    return 1000
+                else:
+                    return -1000
+        
+            if d == 0:
+                return evaluar_tablero(tablero)
 
-    if LeTocaIA:
-        mejorPuntaje = -inf
-        for i in range(casillas_x):
-            for j in range(casillas_y):
-                if tablero[i][j] == "B":
-                    
-                    puntaje = alfaBetaLimitada(lista_mov,False,d-1,alfa,beta)
-                    tablero
+            if LeTocaIA:
+                mejorPuntaje = -inf
+                for i in range(casillas_x):
+                    for j in range(casillas_y):
+                        if tablero[i][j] == "B":
+                            
+                            puntaje = alfaBetaLimitada(moviento,False,d-1,alfa,beta)
+                            tablero
+    else:
+        print(2)
 
 
     
 ##IA PROFE
 def mejorMovimiento(tablero):
-    global player
+    global ficha_IA
     casillas_x,casillas_y = tablero.shape #Daria 6,6
     mejorPuntaje = -inf
     movimiento = None
     d = 5 #profundidad del árbol de búsqueda que revisa
-    if player == 1 : #IA ES BLANCA
+    if ficha_IA == "N" : #IA ES NEGRA
         for i in range(casillas_x):  
             for j in range(casillas_y):   
-                if tablero[i][j] == 'B': # Selecciona una
-                    moviento_posible_ia = generar_movimientos(tablero,"B")
-                    for moviento_eva in moviento_posible_ia:
-                        puntaje = alfaBetaLimitada() #puntaje
+                if tablero[i][j] == 'N': # Selecciona una
+                    moviento_posible_ia = generar_movimientos(tablero,"N")
+                    for moviento_eval in moviento_posible_ia:
+                        puntaje = alfaBetaLimitada(moviento,) #puntaje
                         print(f"{(i,j)} ptje: {puntaje}")
                         tablero[i][j] = '*'
                         if puntaje > mejorPuntaje:
                             mejorPuntaje = puntaje
                             movimiento = (i, j)
         return movimiento
-    else: #la IA es color negro
+    else: #la IA es color blanco
         for i in range(casillas_x):  
             for j in range(casillas_y):   
-                if tablero[i][j] == 'N': # Selecciona una
-                    moviento_posible_ia = generar_movimientos(tablero,"N")
+                if tablero[i][j] == 'B': # Selecciona una
+                    moviento_posible_ia = generar_movimientos(tablero,"B")
                     for moviento_eva in moviento_posible_ia:
                         puntaje = alfaBetaLimitada()#puntaje
                         print(f"{(i,j)} ptje: {puntaje}")
@@ -314,8 +317,10 @@ while player not in [1,2]:
 
 if player == 1:
     quien_parte = "Humano"
+    ficha_IA = "B"
 else:
     quien_parte = "IA"
+    ficha_IA = "N"
 
 turno_actual = quien_parte
 turno = 1
@@ -329,7 +334,7 @@ while not juego_terminado:
     if turno_actual == 'IA':
         print(f"Juega IA - Fichas {'Blancas' if player == 1 else 'Negras'}:")
         # --- AQUÍ IRÁ LA LÓGICA DE LA IA MÁS ADELANTE ---
-        # (i,j) = mejorMovimiento(tablero)
+        (i,j) = mejorMovimiento(tablero)
         # Aquí la IA moverá su ficha y evaluará si ganó...
         print("La IA está calculando su movimiento... (Lógica pendiente)")
         # Cambiamos el turno al humano
