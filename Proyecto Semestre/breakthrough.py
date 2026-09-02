@@ -2,6 +2,8 @@
 import numpy as np
 from math import inf
 
+    # Queda evaluar la herustica de la ia
+
 # Funcion que verifica que se ingresen solo numeros
 def verificar_solo_digito(digito):
     while not isinstance(digito, int):
@@ -27,8 +29,9 @@ def cordenada_valida(fila,columna,tablero):
     limite_fila,limite_columna = tablero.shape
     return (0 <= fila < limite_fila) and (0 <= columna < limite_columna)
 
-# Funcion que verifica la posicion final si es habil para el movimiento
-def verificar_posicion_final(tablero, mov_ficha_fila, mov_ficha_columna, turno, opcion,texto): 
+# Funcion que verifica la posicion final si es habil para el movimiento, solamente para el humano
+def verificar_posicion_final(tablero, mov_ficha_fila, mov_ficha_columna, opcion,texto):
+    global ficha_IA 
     cordenada = cordenada_valida(mov_ficha_fila,mov_ficha_columna,tablero)
     # Si la cordena se encuentra fuera de los limites
     if not cordenada:
@@ -39,13 +42,13 @@ def verificar_posicion_final(tablero, mov_ficha_fila, mov_ficha_columna, turno, 
 
     # Verificacion de que se tome la ficha correspondiente segun el turno
     if opcion == 1: 
-        if turno % 2 == 1: # negro
+        if ficha_IA == "B": # El humano ocupa fichas negras
             if casilla == "N":
                 return True
             else:
                 print("Solamente puede mover fichas negras")
                 return False
-        else: # blanco
+        else: # El humano ocupa fichas blancas
             if casilla == "B":
                 return True
             else:
@@ -54,7 +57,7 @@ def verificar_posicion_final(tablero, mov_ficha_fila, mov_ficha_columna, turno, 
             
     # Verifiacion para moviento de casillas
     else:
-        if turno % 2 == 1: #negro
+        if ficha_IA == "B": # Humano fichas negras
             #condicion ocupada por el mismo color
             if casilla == "N":
                 print("Casilla ocupada por ficha del mismo color!!")
@@ -62,7 +65,7 @@ def verificar_posicion_final(tablero, mov_ficha_fila, mov_ficha_columna, turno, 
             #pieza ocupada por otro color o vacia
             elif (casilla =="*" or casilla =="B") :
                 return True
-        else: #blanco
+        else: # Humano fichas blancas
             #condicion ocupada por el mismo color
             if casilla == "B":
                 print("Casilla ocupada por ficha del mismo color!!")
@@ -80,7 +83,7 @@ def condicion_victoria(tablero):
     # Condicion si uno de los colores es eliminado por el otro
     if restante_b == 0:
         print("\nGanan las fichas Negras por eliminacion")
-        return  "N"
+        return "N"
     if restante_n == 0:
         print("\nGanan las fichas Blancas por eliminacion")
         return "B"
@@ -98,7 +101,7 @@ def condicion_victoria(tablero):
 
 
 # Funcion de moviento de ficha para el humano
-def mover_ficha(tablero,fila,columna,ficha,turno):
+def mover_ficha(tablero,fila,columna,ficha):
     if ficha == "N":
         direccion = -1
     else:
@@ -130,7 +133,7 @@ def mover_ficha(tablero,fila,columna,ficha,turno):
     elif opcion == 4:
         return False
 
-    moviento_valido = verificar_posicion_final(tablero,nueva_fila,nueva_columna,turno,2,"Movimiento")
+    moviento_valido = verificar_posicion_final(tablero,nueva_fila,nueva_columna,2,"Movimiento")
     # Verificacion de si el movimiento es valido
     if not moviento_valido:
         return False
@@ -154,31 +157,41 @@ def mover_ficha(tablero,fila,columna,ficha,turno):
     # Se continua con el siguiente turno
     return "SIGUIENTE TURNO"
 
-#Funcion maxi IA
+# Funcion que genera los movientos para la IA
 def generar_movimientos(tablero, color):
+    # Lista que guarda los movientos
     movimientos = []    
+    # Direccion segun la ficha
     if color == "N":
         direccion = -1
     else:
         direccion = 1
     filas, columnas = tablero.shape
+    # Ciclo que recorrer todas las casillas
     for i in range(filas):
         for j in range(columnas):
+            # Si la ficha en i,j no es de color correspondiete sigue
             if tablero[i][j] != color:
                 continue
+            # La ficha es valida para el turno, avanza
             nueva_fila = i + direccion
+            # Se prueba la ficha en movientos izquierda, recto, derecha
             for nueva_columna in [j - 1, j, j + 1]:
+                # Si el moviento analizado no es valido se contia
                 if not cordenada_valida(nueva_fila, nueva_columna, tablero):
                     continue
+                # Se evalua que se encuentra en la casilla donde se movera la ficha
                 destino = tablero[nueva_fila][nueva_columna]
                 if nueva_columna == j:
                     # Recto solo si esta vacia
                     if destino == "*":
+                        # Agrega las el moviento en forma de lista [[cordenada de origen], [cordenada de destino], .....]
                         movimientos.append(((i,j),(nueva_fila,nueva_columna)))
                 else:
                     # diagonal, vacia o comiendo ficha rival
                     if destino != color:
                         movimientos.append(((i,j),(nueva_fila,nueva_columna)))
+    # Retorna una lista con las cordenas de origen y cordenas finales de la ficha
     return movimientos
 
 # Cuenta cuantos movimientos de "color" son capturas (le comen algo al rival)
@@ -224,73 +237,110 @@ def evaluar_tablero(tablero):
     puntaje -= 5 * amenazas_negras
     return puntaje
 
-
-def alfaBetaLimitada(moviento,LeTocaIA,d,alfa,beta,tablero,color):
-    casillas_x,casillas_y = tablero.shape 
-    if color == "B":
-        ganador = condicion_victoria(tablero) #Devuelve N o B dependendiendo quien gana, sino devuelve un NONE
-        if ganador == "B":
-            return 1000
-        elif ganador == "N":
-            return -1000
-        else: 
-            movimientos = generar_movimientos(tablero, color)
-                
-            if not movimientos:
-                if color == "B":
-                    return 1000
-                else:
-                    return -1000
-        
-            if d == 0:
-                return evaluar_tablero(tablero)
-
-            if LeTocaIA:
-                mejorPuntaje = -inf
-                for i in range(casillas_x):
-                    for j in range(casillas_y):
-                        if tablero[i][j] == "B":
-                            
-                            puntaje = alfaBetaLimitada(moviento,False,d-1,alfa,beta)
-                            tablero
+# Funcion que evalua el tablero con el moviento de prueba y entrega el mejor moviento
+def alfaBetaLimitada(tablero,LeTocaIA,d,alfa,beta):
+    global ficha_IA
+    # Seleccion de ficha oponente para la seccion de min
+    if ficha_IA == "N":
+        ficha_oponente = "B"
     else:
-        print(2)
+        ficha_oponente = "N"
 
+    # Casos base
+    ganador = condicion_victoria(tablero)
+    if ganador == ficha_IA: # Gana la IA
+        return 1
+    elif ganador != ficha_IA:  # Gana el humano
+        return -1
 
+    # La poda llega a su limite, se evalua el tablero
+    if d == 0:
+        return evaluar_tablero(tablero)
+
+    if LeTocaIA: 
+        mejorPuntaje = -inf
+        moviento_posible_ia = generar_movimientos(tablero,ficha_IA)
+        for moviento_evaluado in moviento_posible_ia:
+            # Seleccionamos las cordenadas de prueba
+            origen = moviento_evaluado[0] # Cordenada (i_inicio,j_inicio)
+            final = moviento_evaluado[1] # Cordenada (i_final,j_final)
+
+            # Se guarda el dato que esta donde se movera ficha, ej: "N" o "*"
+            dato_ficha = tablero[final[0]][final[1]]
+
+            # Simulacion del moviento
+            # La ficha se mueve de su casilla
+            tablero[origen[0]][origen[1]] = "*"
+            # La ficha aterriza en su nueva posicion
+            tablero[final[0]][final[1]] = ficha_IA
+    
+            puntaje = alfaBetaLimitada(tablero, False, d-1, alfa, beta)
+                    
+            # Se restaura el moviento realizado en el tablero
+            tablero[origen[0]][origen[1]] = ficha_IA
+            tablero[final[0]][final[1]] = dato_ficha
+
+            mejorPuntaje = max(puntaje, mejorPuntaje)
+            alfa = max(alfa, mejorPuntaje)
+            if alfa >= beta:
+                break
+    else:   # La IA evalua el posible moviento del humano
+        mejorPuntaje = inf
+        moviento_humano_sim = generar_movimientos(tablero,ficha_oponente)
+        for moviento_evaluado in moviento_humano_sim:
+            origen = moviento_evaluado[0] 
+            final = moviento_evaluado[1]
+            dato_ficha = tablero[final[0]][final[1]]
+            tablero[origen[0]][origen[1]] = "*"
+            tablero[final[0]][final[1]] = ficha_IA
+            puntaje = alfaBetaLimitada(tablero, True, d-1, alfa, beta)
+            tablero[origen[0]][origen[1]] = ficha_IA
+            tablero[final[0]][final[1]] = dato_ficha
+            mejorPuntaje = min(puntaje, mejorPuntaje)
+            beta = min(beta, mejorPuntaje)
+            if alfa >= beta:
+                break
+    # Retorna el mejor valor encontrado del tablero simulado
+    return mejorPuntaje
     
 ##IA PROFE
 def mejorMovimiento(tablero):
     global ficha_IA
-    casillas_x,casillas_y = tablero.shape #Daria 6,6
     mejorPuntaje = -inf
     movimiento = None
-    d = 5 #profundidad del árbol de búsqueda que revisa
-    if ficha_IA == "N" : #IA ES NEGRA
-        for i in range(casillas_x):  
-            for j in range(casillas_y):   
-                if tablero[i][j] == 'N': # Selecciona una
-                    moviento_posible_ia = generar_movimientos(tablero,"N")
-                    for moviento_eval in moviento_posible_ia:
-                        puntaje = alfaBetaLimitada(moviento,) #puntaje
-                        print(f"{(i,j)} ptje: {puntaje}")
-                        tablero[i][j] = '*'
-                        if puntaje > mejorPuntaje:
-                            mejorPuntaje = puntaje
-                            movimiento = (i, j)
-        return movimiento
-    else: #la IA es color blanco
-        for i in range(casillas_x):  
-            for j in range(casillas_y):   
-                if tablero[i][j] == 'B': # Selecciona una
-                    moviento_posible_ia = generar_movimientos(tablero,"B")
-                    for moviento_eva in moviento_posible_ia:
-                        puntaje = alfaBetaLimitada()#puntaje
-                        print(f"{(i,j)} ptje: {puntaje}")
-                        tablero[i][j] = '*'
-                        if puntaje > mejorPuntaje:
-                            mejorPuntaje = puntaje
-                            movimiento = (i, j)
-        return movimiento
+    # Profundidad del arbol a evaluar
+    d = 5 
+    # generar_moviento realiza los ciclos que leen todo el tablero y 
+    # evalua segun la ficha de la IA e retornar un arreglo
+    # de forma [[(i_inicio,j_inicio),(i_final,j_final)],[(),()], ...]
+    moviento_posible_ia = generar_movimientos(tablero,ficha_IA)
+    for moviento_evaluado in moviento_posible_ia:
+        # Seleccionamos las cordenadas de prueba
+        origen = moviento_evaluado[0] # Cordenada (i_inicio,j_inicio)
+        final = moviento_evaluado[1] # Cordenada (i_final,j_final)
+
+        # Se guarda el dato que esta donde se movera ficha, ej: "N" o "*"
+        dato_ficha = tablero[final[0]][final[1]]
+
+        # Simulacion del moviento
+        # La ficha se mueve de su casilla
+        tablero[origen[0]][origen[1]] = "*"
+        # La ficha aterriza en su nueva posicion
+        tablero[final[0]][final[1]] = ficha_IA
+
+        # Evaluacion del moviento realizado,entregando el tablero con el moviento simulado
+        puntaje = alfaBetaLimitada(tablero,False,d,-inf,inf) 
+
+        # Se restaura el moviento realizado en el tablero
+        tablero[origen[0]][origen[1]] = ficha_IA
+        tablero[final[0]][final[1]] = dato_ficha
+
+        # Segun el puntaje obtenido, guarda el mejor moviento de la lista
+        if puntaje > mejorPuntaje:
+            mejorPuntaje = puntaje
+            movimiento = moviento_evaluado
+    # Retorna las cordenas mejor encontradas [0] --> conrdenada inicio [1] --> cordenada final
+    return movimiento
 ##
 
 print("Bienvenido a Brakthrougth\n")
@@ -314,11 +364,13 @@ while player not in [1,2]:
     print("Error!")
     player= verificar_solo_digito(input("Seleccione una ficha: "))
 
-
+# Seleccion de quien parte
 if player == 1:
+    # Humano fichas negras, IA fichas blancas
     quien_parte = "Humano"
     ficha_IA = "B"
 else:
+    # Humano fichas blancas, IA fichas negras
     quien_parte = "IA"
     ficha_IA = "N"
 
@@ -334,9 +386,11 @@ while not juego_terminado:
     if turno_actual == 'IA':
         print(f"Juega IA - Fichas {'Blancas' if player == 1 else 'Negras'}:")
         # --- AQUÍ IRÁ LA LÓGICA DE LA IA MÁS ADELANTE ---
-        (i,j) = mejorMovimiento(tablero)
-        # Aquí la IA moverá su ficha y evaluará si ganó...
-        print("La IA está calculando su movimiento... (Lógica pendiente)")
+        origen,final = mejorMovimiento(tablero)
+        # Se coloca la ficha correspiendiente en el mejor moviento  y se modifica el tablero original
+        tablero[origen[0]][origen[1]] = "*"
+        tablero[final[0]][final[1]] = ficha_IA
+        print(f"Moviento de la IA realizado desde ({origen[0]},{origen[1]}) hasta ({final[0]},{final[1]})")
         # Cambiamos el turno al humano
         turno_actual = 'Humano'
         
@@ -351,12 +405,12 @@ while not juego_terminado:
             n_columna = verificar_solo_digito(input("Ingrese la columna: "))
 
             # Se verifica que la posicion sea valida y la ficha correspondiente al turno
-            while not verificar_posicion_final(tablero, n_fila, n_columna, turno, 1, "Casilla"):
+            while not verificar_posicion_final(tablero, n_fila, n_columna,1, "Casilla"):
                 n_fila = verificar_solo_digito(input("Ingresa la fila: "))
                 n_columna = verificar_solo_digito(input("Ingrese la columna: "))
 
             # Se procede a mover la ficha seleccionada
-            resultado = mover_ficha(tablero, n_fila, n_columna, tablero[n_fila][n_columna], turno)
+            resultado = mover_ficha(tablero, n_fila, n_columna, tablero[n_fila][n_columna])
 
             # Si resultado retorna juego terminado, se finaliza la partida
             if resultado == "JUEGO TERMINADO":

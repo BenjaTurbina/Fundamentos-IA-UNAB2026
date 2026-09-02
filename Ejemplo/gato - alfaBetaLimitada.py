@@ -9,7 +9,7 @@ def imprimeTablero(tablero):
     print()
 
 def tableroLleno(tablero):
-    for fila in tablero:
+    for fila in tablero:    # Revisa que si el tablero cuenta con casillas vacias todavia
         if '.' in fila:
             return False
     return True
@@ -101,6 +101,7 @@ def estimacion(tablero):
 
 
 def alfaBetaLimitada(tablero, leTocaAlAgente, d, alfa, beta):
+    # Contador para mostrar cuantos tableros se evaluaron
     global cont
     cont += 1
     #CASOS BASE: 
@@ -120,7 +121,9 @@ def alfaBetaLimitada(tablero, leTocaAlAgente, d, alfa, beta):
         mejorPuntaje = -inf
         for i in range(3):
             for j in range(3):
+                # Se repite la misma logica de evaluacion que en mejor moviento
                 if tablero[i][j] == '.':
+                    # Coloca una X en esa posicion
                     tablero[i][j] = 'X'                             #prueba la jugada i,j
                     puntaje = alfaBetaLimitada(tablero, False, d-1, alfa, beta)   #Regresa de la recursión
                     tablero[i][j] = '.'                             #borra la jugada i,j
@@ -149,13 +152,19 @@ def mejorMovimiento(tablero):
     for i in range(3):  
         for j in range(3):   
             if tablero[i][j] == '.':
+                # Coloca una X en ese espacio para simular el puntaje
                 tablero[i][j] = 'X'
+                # Evalua el moviento en la cordenada
                 puntaje = alfaBetaLimitada(tablero, False, d, -inf, inf)
+                # Muestra el valor del moviento en la cordenada
                 print(f"{(i,j)} ptje: {puntaje}")
+                # Devuelve la posicion del tablero a su forma default
                 tablero[i][j] = '.'
+                # Evalua cual fue el mejor puntaje y guarda el moviento
                 if puntaje > mejorPuntaje:
                     mejorPuntaje = puntaje
                     movimiento = (i, j)
+    # Retorna la cordenada donde va el moviento, que se cambia en el codigo main
     return movimiento
 
 
@@ -167,9 +176,11 @@ def juegoGato():
     while buscaGanador(tablero) == None and not tableroLleno(tablero):
         imprimeTablero(tablero)
         if turno == 'X':
+            # Recibe el mejor moviento encontrado
             (i,j) = mejorMovimiento(tablero)   
             print(f"Número de tableros revisados: {cont}")
             cont = 0
+            # En la cordenadas i,j del mejor moviento encontrado coloca la ficha de la ia
             tablero[i][j] = 'X'
             print("Juego del PC:")
             turno = 'O'
