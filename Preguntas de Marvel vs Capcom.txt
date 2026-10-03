@@ -8,409 +8,78 @@ Preguntas de Marvel vs Capcom
 	?- franquicia(X, marvel).
 
 3- De que grupo son X personajes?
+	Que personajes son los perteneciente a los X-MEN
 	?- findall(Personaje, grupo(Personaje, x_men), Lista).
+
+	Que personajes son los pertenecientes a Street Figther
 	?- findall(Personaje, grupo(Personaje, street_figther), Lista).
 
 4.- Que personajes son hombre o mujer o otro
+	Que personajes son mujeres
 	?- findall(P, genero(P, mujer), Mujeres).
 
 	Pregunta anidada que personajes son mujer y pertenecen a los X-Men
 		?- findall(P, (genero(P, mujer), grupo(P, x_men)), MujeresXMen).
 
 5.- De que raza son X personajes
+	Que personajes son de la raza mutantes y cyborg
 	?- findall(P, (especie(P, mutante), especie(P, cyborg)), Hibridos).
+
+	Que personajes son puramente extraterrestres
 	?- findall(P, (especie(P, extraterrestre), \+ especie(P, humano)), AliensPuros).
 
-6.- De que nivel son los mutantes del juego?
+6.- De que nivel son los mutantes del juego?	
+	Que personajes son de nivel mutante Omega
+	?- findall(P, nivel_mutante(P, omega), Omegas).
 
-7.- Que personaje es progonista de su grupo?
+	Que personajes son de mutantes Omega y mujeres
+	?- findall(P, (nivel_mutante(P, omega), genero(P, mujer)), MujeresOmegaXMen).
 
+	Que personajes son de nivel Alpha y de la especie cyborg
+	?- findall(P, (nivel_mutante(P, alpha), especie(P, cyborg)), AlphaCyborgs).
 
+7.- Que personaje es protagonista de su grupo?
+	Quien es el lider de los X-Men en MvsC2
+	?- personaje_principal(x_men, Lider).
 
-% ==============================================================================
-% FRANQUICIA: MARVEL (28 personajes)
-% ==============================================================================
-% Declaración del personaje
-personaje(blackheart).
-personaje(cable).
-personaje(captain_america).
-personaje(colossus).
-personaje(cyclops).
-personaje(doctor_doom).
-personaje(gambit).
-personaje(hulk).
-personaje(iceman).
-personaje(iron_man).
-personaje(juggernaut).
-personaje(magneto).
-personaje(marrow).
-personaje(omega_red).
-personaje(psylocke).
-personaje(rogue).
-personaje(sabretooth).
-personaje(sentinel).
-personaje(shuma_gorath).
-personaje(silver_samurai).
-personaje(spider_man).
-personaje(spiral).
-personaje(storm).
-personaje(thanos).
-personaje(venom).
-personaje(war_machine).
-personaje(wolverine).
-personaje(bone_wolverine). % Wolverine con garras de hueso es un slot distinto en MvC2
+	Que personajes son los lideres de sus grupos en Marvel
+	?- findall(P, (personaje_principal(Grupo, P), franquicia(P, marvel)), LideresMarvel).
 
-% ==============================================================================
-% FRANQUICIA: CAPCOM (28 personajes)
-% ==============================================================================
-% Declaración del personaje
-personaje(akuma).
-personaje(amingo).
-personaje(anakaris).
-personaje(bb_hood).
-personaje(cammy).
-personaje(captain_commando).
-personaje(charlie).
-personaje(chun_li).
-personaje(dan).
-personaje(dhalsim).
-personaje(felicia).
-personaje(guile).
-personaje(hayato).
-personaje(jill).
-personaje(jin).
-personaje(ken).
-personaje(m_bison).
-personaje(mega_man).
-personaje(morrigan).
-personaje(roll).
-personaje(ruby_heart).
-personaje(ryu).
-personaje(sakura).
-personaje(servbot).
-personaje(sonson).
-personaje(strider_hiryu).
-personaje(tron_bonne).
-personaje(zangief).
+	Que grupo son liderados por mujeres
+	?- findall(Grupo, (personaje_principal(Grupo, P), genero(P, mujer)), GruposLideradosPorMujeres).
 
-% Asignación a la franquicia marvel
-franquicia(blackheart, marvel).
-franquicia(cable, marvel).
-franquicia(captain_america, marvel).
-franquicia(colossus, marvel).
-franquicia(cyclops, marvel).
-franquicia(doctor_doom, marvel).
-franquicia(gambit, marvel).
-franquicia(hulk, marvel).
-franquicia(iceman, marvel).
-franquicia(iron_man, marvel).
-franquicia(juggernaut, marvel).
-franquicia(magneto, marvel).
-franquicia(marrow, marvel).
-franquicia(omega_red, marvel).
-franquicia(psylocke, marvel).
-franquicia(rogue, marvel).
-franquicia(sabretooth, marvel).
-franquicia(sentinel, marvel).
-franquicia(shuma_gorath, marvel).
-franquicia(silver_samurai, marvel).
-franquicia(spider_man, marvel).
-franquicia(spiral, marvel).
-franquicia(storm, marvel).
-franquicia(thanos, marvel).
-franquicia(venom, marvel).
-franquicia(war_machine, marvel).
-franquicia(wolverine, marvel).
-franquicia(bone_wolverine, marvel).
+8.- Primera aparacion de los personajes
+	Que personajes aparecieron en la decada de los 80s
+	?- findall(P, (primera_aparicion(P, Anio, _), Anio >= 1980, Anio =< 1989), AparicionEnLosOchenta).
 
-% Asignación a la franquicia de capcom
-franquicia(akuma, capcom).
-franquicia(amingo, capcom).
-franquicia(anakaris, capcom).
-franquicia(bb_hood, capcom).
-franquicia(cammy, capcom).
-franquicia(captain_commando, capcom).
-franquicia(charlie, capcom).
-franquicia(chun_li, capcom).
-franquicia(dan, capcom).
-franquicia(dhalsim, capcom).
-franquicia(felicia, capcom).
-franquicia(guile, capcom).
-franquicia(hayato, capcom).
-franquicia(jill, capcom).
-franquicia(jin, capcom).
-franquicia(ken, capcom).
-franquicia(m_bison, capcom).
-franquicia(mega_man, capcom).
-franquicia(morrigan, capcom).
-franquicia(roll, capcom).
-franquicia(ruby_heart, capcom).
-franquicia(ryu, capcom).
-franquicia(sakura, capcom).
-franquicia(servbot, capcom).
-franquicia(sonson, capcom).
-franquicia(strider_hiryu, capcom).
-franquicia(tron_bonne, capcom).
-franquicia(zangief, capcom).
+	Personajes originales de Street Figther II
+	?- findall(P, primera_aparicion(P, _, 'Street Fighter II'), SF2_Originals).
+
+9.- De que localidades son los personajes
+	Cuales personajes son de japon?
+	?- findall(P, origen(P, japon), TeamJapon).
+
+	Cuales personaes son de estados unidos?
+	?- findall(P, origen(P, estados_unidos), EEUU).
+
+10.- Detalles de quien desarrola el juego, cuando salio, en que consolas a salido o donde se podia encontrar
+	Quine desarrollo el juego 
+	?- desarrollador(mvc2, Desarrollador)
+
+	En que consolas a salido el juego?
+	?- findall(Plataforma, lanzamiento(mvc2, Plataforma, _), Consolas).
+
+	En que consolas salio originalmente el juego
+	?- findall(Plataforma, lanzamiento(mvc2, Plataforma, 2000), LanzamientoOriginal).
+
+11.- Cuales son los escenarios de pelea que tiene el juego
+
+12.- Que tipos de asistencias tiene los personajes del juego
+
+13.- Que sistemas tiene el competitivo rushdown, zoning
+
+14.- Tier list de los personajes en la salida del juego
 
 
-% CAPCOM
 
-% ---------------------------------------------------------
-% STREET FIGHTER
-% ---------------------------------------------------------
-grupo(zangief, street_fighter).
-grupo(cammy, street_fighter).
-grupo(guile, street_fighter).
-grupo(chun_li, street_fighter).
-grupo(m_bison, street_fighter).
-grupo(charlie, street_fighter).
-grupo(dhalsim, street_fighter).
-grupo(dan, street_fighter).
-grupo(sakura, street_fighter).
-grupo(ryu, street_fighter).
-grupo(ken, street_fighter).
-grupo(akuma, street_fighter).
-
-% ---------------------------------------------------------
-% DARKSTALKERS
-% ---------------------------------------------------------
-grupo(morrigan, darkstalkers).
-grupo(felicia, darkstalkers).
-grupo(anakaris, darkstalkers).
-grupo(bb_hood, darkstalkers).
-
-% ---------------------------------------------------------
-% MEGA MAN
-% ---------------------------------------------------------
-grupo(mega_man, mega_man).
-grupo(roll, mega_man).
-grupo(tron_bonne, mega_man).
-grupo(servbot, mega_man).
-
-% ---------------------------------------------------------
-% SEPARADOS
-% ---------------------------------------------------------
-grupo(strider_hiryu, strider).
-grupo(hayato, star_gladiator).
-grupo(jin, cyberbots).
-grupo(jill, resident_evil).
-grupo(captain_commando, captain_commando).
-grupo(sonson, sonson).
-grupo(amingo, original_characters).
-grupo(ruby_heart, original_characters).
-
-% GRUPO MARVEL
-
-% ---------------------------------------------------------
-% X-MEN
-% ---------------------------------------------------------
-grupo(juggernaut, x_men).
-grupo(iceman, x_men).
-grupo(magneto, x_men).
-grupo(cable, x_men).
-grupo(sentinel, x_men).
-grupo(sabretooth, x_men).
-grupo(marrow, x_men).
-grupo(spiral, x_men).
-grupo(cyclops, x_men).
-grupo(colossus, x_men).
-grupo(omega_red, x_men).
-grupo(psylocke, x_men).
-grupo(rogue, x_men).
-grupo(gambit, x_men).
-grupo(storm, x_men).
-grupo(silver_samurai, x_men).
-grupo(wolverine, x_men).
-grupo(bone_wolverine, x_men).
-
-% ---------------------------------------------------------
-% VILLAINS
-% ---------------------------------------------------------
-grupo(blackheart, villains).
-grupo(shuma_gorath, villains).
-grupo(doctor_doom, villains).
-grupo(thanos, villains).
-
-% ---------------------------------------------------------
-% SPIDER-MAN
-% ---------------------------------------------------------
-grupo(spider_man, spider_man).
-grupo(venom, spider_man).
-
-% ---------------------------------------------------------
-% IRON MAN
-% ---------------------------------------------------------
-grupo(iron_man, iron_man).
-grupo(war_machine, iron_man).
-
-% ---------------------------------------------------------
-% SEPARADOS
-% ---------------------------------------------------------
-grupo(hulk, the_hulk).
-grupo(captain_america, captain_america).
-
-
-% GÉNERO
-
-% ---------------------------------------------------------
-% MUJERES
-% ---------------------------------------------------------
-genero(cammy, mujer).
-genero(chun_li, mujer).
-genero(sakura, mujer).
-genero(morrigan, mujer).
-genero(felicia, mujer).
-genero(bb_hood, mujer).
-genero(roll, mujer).
-genero(tron_bonne, mujer).
-genero(jill, mujer).
-genero(sonson, mujer).
-genero(ruby_heart, mujer).
-genero(marrow, mujer).
-genero(spiral, mujer).
-genero(psylocke, mujer).
-genero(rogue, mujer).
-genero(storm, mujer).
-
-% ---------------------------------------------------------
-% HOMBRES
-% ---------------------------------------------------------
-genero(zangief, hombre).
-genero(guile, hombre).
-genero(m_bison, hombre).
-genero(charlie, hombre).
-genero(dhalsim, hombre).
-genero(dan, hombre).
-genero(ryu, hombre).
-genero(ken, hombre).
-genero(akuma, hombre).
-genero(anakaris, hombre).
-genero(mega_man, hombre).
-genero(strider_hiryu, hombre).
-genero(hayato, hombre).
-genero(jin, hombre).
-genero(captain_commando, hombre).
-genero(juggernaut, hombre).
-genero(iceman, hombre).
-genero(magneto, hombre).
-genero(cable, hombre).
-genero(sabretooth, hombre).
-genero(cyclops, hombre).
-genero(colossus, hombre).
-genero(omega_red, hombre).
-genero(gambit, hombre).
-genero(silver_samurai, hombre).
-genero(wolverine, hombre).
-genero(bone_wolverine, hombre).
-genero(blackheart, hombre).
-genero(doctor_doom, hombre).
-genero(thanos, hombre).
-genero(spider_man, hombre).
-genero(venom, hombre).
-genero(iron_man, hombre).
-genero(war_machine, hombre).
-genero(hulk, hombre).
-genero(captain_america, hombre).
-
-% ---------------------------------------------------------
-% OTROS (Robots, Plantas, Entes)
-% ---------------------------------------------------------
-genero(servbot, otro).
-genero(amingo, otro).
-genero(sentinel, otro).
-genero(shuma_gorath, otro).
-
-% ==============================================================================
-% ESPECIE / NATURALEZA
-% ==============================================================================
-% Nota: Algunos personajes tienen múltiples entradas si son híbridos.
-
-% ---------------------------------------------------------
-% HUMANOS (Base)
-% ---------------------------------------------------------
-especie(zangief, humano).
-especie(cammy, humano).
-especie(guile, humano).
-especie(chun_li, humano).
-especie(m_bison, humano).
-especie(charlie, humano).
-especie(dhalsim, humano).
-especie(dan, humano).
-especie(sakura, humano).
-especie(ryu, humano).
-especie(ken, humano).
-especie(akuma, humano).
-especie(bb_hood, humano).
-especie(tron_bonne, humano).
-especie(strider_hiryu, humano).
-especie(hayato, humano).
-especie(jin, humano).
-especie(jill, humano).
-especie(captain_commando, humano).
-especie(ruby_heart, humano).
-especie(doctor_doom, humano).
-especie(iron_man, humano).
-especie(war_machine, humano).
-especie(venom, humano). % Dependencia del huésped (Eddie Brock)
-
-% ---------------------------------------------------------
-% HUMANOS MUTADOS / ALTERADOS (Ciencia o magia, sin Gen X)
-% ---------------------------------------------------------
-especie(spider_man, humano_mutado).
-especie(hulk, humano_mutado).
-especie(captain_america, humano_mutado).
-especie(juggernaut, humano_mutado). % Poder otorgado por la gema de Cyttorak
-
-% ---------------------------------------------------------
-% MUTANTES (Portadores del Gen X)
-% ---------------------------------------------------------
-especie(iceman, mutante).
-especie(magneto, mutante).
-especie(cable, mutante).
-especie(sabretooth, mutante).
-especie(marrow, mutante).
-especie(cyclops, mutante).
-especie(colossus, mutante).
-especie(omega_red, mutante).
-especie(psylocke, mutante).
-especie(rogue, mutante).
-especie(gambit, mutante).
-especie(storm, mutante).
-especie(silver_samurai, mutante).
-especie(wolverine, mutante).
-especie(bone_wolverine, mutante).
-
-% ---------------------------------------------------------
-% ROBOTS / CYBORGS / ANDROIDES
-% ---------------------------------------------------------
-especie(mega_man, robot).
-especie(roll, robot).
-especie(servbot, robot).
-especie(sentinel, robot).
-especie(cable, cyborg).     % Híbrido: Mutante y Cyborg
-especie(omega_red, cyborg). % Híbrido: Mutante y Cyborg
-especie(spiral, cyborg).    % Híbrido: Extraterrestre y Cyborg
-
-% ---------------------------------------------------------
-% EXTRATERRESTRES / ALIENÍGENAS
-% ---------------------------------------------------------
-especie(thanos, extraterrestre).
-especie(spiral, extraterrestre). % Habitante del Mojoverso
-especie(venom, extraterrestre).  % El Simbionte
-
-% ---------------------------------------------------------
-% DEMONIOS / MONSTRUOS / ENTIDADES MÁGICAS
-% ---------------------------------------------------------
-especie(morrigan, demonio).
-especie(blackheart, demonio).
-especie(felicia, monstruo). % Mujer gato
-especie(anakaris, no_muerto).
-especie(shuma_gorath, entidad_cosmica).
-especie(sonson, bestia).
-
-% ---------------------------------------------------------
-% PLANTAS
-% ---------------------------------------------------------
-especie(amingo, planta).
 
