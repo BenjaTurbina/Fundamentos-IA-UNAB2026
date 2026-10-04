@@ -234,7 +234,7 @@ grupo(bone_wolverine, x_men).
 grupo(blackheart, villano).
 grupo(shuma_gorath, villano).
 grupo(doctor_doom, villano).
-grupo(thanos, villaino).
+grupo(thanos, villano).
 
 % ---------------------------------------------------------
 % SPIDER-MAN
@@ -631,12 +631,169 @@ es_lugar_real(escocia).
 es_lugar_real(egipto).
 es_lugar_real(europa_del_norte).
 
+% ==============================================================================
+% ESCENARIOS DE PELEA (MAPAS)
+% ==============================================================================
+
+% Nombres
+escenario(airship, 'Barco Volador de Ruby Heart').
+escenario(amusement_park, 'Parque de Diversiones').
+escenario(clock_tower, 'Torre del Reloj').
+escenario(desert, 'Desierto').
+escenario(factory, 'Fábrica').
+escenario(ice, 'Cueva de Hielo').
+escenario(river, 'Río').
+escenario(swamp, 'Pantano').
+escenario(abyss_lair, 'Guarida de Abyss').
+
+% Clasificación del escenario (regular o jefe final)
+tipo_escenario(airship, regular).
+tipo_escenario(amusement_park, regular).
+tipo_escenario(clock_tower, regular).
+tipo_escenario(desert, regular).
+tipo_escenario(factory, regular).
+tipo_escenario(ice, regular).
+tipo_escenario(river, regular).
+tipo_escenario(swamp, regular).
+tipo_escenario(abyss_lair, jefe_final).
 
 
 % ==============================================================================
-% 				LISTA DE REGLAS 
+% TIER LIST DE PERSONAJES (Estructura: tier(Personaje, Nivel))
 % ==============================================================================
 
+% ---------------------------------------------------------
+% GOD TIER
+% ---------------------------------------------------------
+tier(sentinel, S_tier).
+tier(storm, S_tier).
+tier(cable, S_tier).
+tier(magneto, S_tier).
+
+% ---------------------------------------------------------
+% HIGH TIER (Tier A)
+% ---------------------------------------------------------
+tier(cyclops, A_tier).
+tier(iron_man, A_tier).
+tier(war_machine, A_tier).
+tier(doctor_doom, A_tier).
+tier(strider_hiryu, A_tier).
+tier(spiral, A_tier).
+tier(dhalsim, A_tier).
+tier(blackheart, A_tier).
+
+% ---------------------------------------------------------
+% HIGH MIDDLE TIER (Tier B)
+% ---------------------------------------------------------
+tier(psylocke, B_tier).
+tier(captain_commando, B_tier).
+tier(tron_bonne, B_tier).
+
+% ---------------------------------------------------------
+% MIDDLE TIER (Tier C)
+% ---------------------------------------------------------
+tier(ruby_heart, C_tier).
+tier(omega_red, C_tier).
+tier(colossus, C_tier).
+tier(juggernaut, C_tier).
+tier(rogue, C_tier).
+tier(cammy, C_tier).
+tier(mega_man, C_tier).
+tier(guile, C_tier).
+tier(anakaris, C_tier).
+tier(silver_samurai, C_tier).
+tier(marrow, C_tier).
+tier(gambit, C_tier).
+tier(iceman, C_tier).
+tier(spider_man, C_tier).
+tier(bone_wolverine, C_tier).
+tier(wolverine, C_tier).
+tier(venom, C_tier).
+
+% ---------------------------------------------------------
+% LOW TIER (Tier D)
+% ---------------------------------------------------------
+tier(bb_hood, D_tier).
+tier(sakura, D_tier).
+tier(sonson, D_tier).
+tier(akuma, D_tier).
+tier(ken, D_tier).
+tier(ryu, D_tier).
+tier(charlie, D_tier).
+tier(m_bison, D_tier).
+tier(captain_america, D_tier).
+tier(hulk, D_tier).
+tier(jin, D_tier).
+tier(jill, D_tier).
+tier(felicia, D_tier).
+tier(hayato, D_tier).
+tier(morrigan, D_tier).
+tier(sabretooth, D_tier).
+tier(thanos, D_tier).
+tier(zangief, D_tier).
+
+% ---------------------------------------------------------
+% BOTTOM TIER (Tier F )
+% ---------------------------------------------------------
+tier(amingo, F_tier).
+tier(chun_li, F_tier).
+tier(shuma_gorath, F_tier).
+tier(dan, F_tier).
+tier(servbot, F_tier).
+tier(roll, F_tier).
+
+% ==============================================================================
+% 1. PERSONAJES QUE FUERON CAMPEONES DE UN TORNEO EVO
+% Estructura: personaje_campeon_evo(Personaje).
+% ==============================================================================
+
+personaje_campeon_evo(magneto).
+personaje_campeon_evo(cable).
+personaje_campeon_evo(sentinel).
+personaje_campeon_evo(storm).
+personaje_campeon_evo(captain_commando).
+personaje_campeon_evo(spiral).
+personaje_campeon_evo(cyclops).
+personaje_campeon_evo(psylocke).
+
+% ==============================================================================
+% 2. CAMPEONES DE EVO Y EN QUÉ AÑO GANARON
+% Estructura: campeon_evo(Anio, Jugador).
+% ==============================================================================
+
+campeon_evo(2002, 'Justin Wong').
+campeon_evo(2003, 'Justin Wong').
+campeon_evo(2004, 'Justin Wong').
+campeon_evo(2005, 'Duc Do').
+campeon_evo(2006, 'Justin Wong').
+campeon_evo(2007, 'Michael Mendoza').
+campeon_evo(2008, 'Justin Wong').
+campeon_evo(2009, 'Sanford Kelly').
+campeon_evo(2010, 'Justin Wong').
+campeon_evo(2025, 'Khaos').
+
+
+% ==============================================================================
+% 				LISTA DE PREDICADOS
+% ==============================================================================
+
+mismo_pais(PersonajeA,PersonajeB):-
+    origen(PersonajeA, Pais),
+    origen(PersonajeB, Pais),
+    PersonajeA \= PersonajeB.
+
+son_aliados(PersonajeA, PersonajeB) :-
+    grupo(PersonajeA, FaccionComun),
+    grupo(PersonajeB, FaccionComun),
+    PersonajeA \= PersonajeB.
+
+victorias_jugador(Jugador, Total) :-
+    setof(Anio, campeon_evo(Anio, Jugador), ListaAnios),
+    length(ListaAnios, Total).
+
+maximo_ganador(Jugador, MaxVictorias) :-
+    setof(Total-J, victorias_jugador(J, Total), ListaResultados),
+    last(ListaResultados, MaxVictorias-Jugador).
 
 equipo_crossover_lore(LiderCapcom, MutanteElite, VillanoAntiguo) :-
     % 1. Condición del líder: Rostro principal de un grupo y perteneciente a Capcom
@@ -648,10 +805,10 @@ equipo_crossover_lore(LiderCapcom, MutanteElite, VillanoAntiguo) :-
     (nivel_mutante(MutanteElite, omega) ; nivel_mutante(MutanteElite, alpha)),
     
     % 3. Condición del villano: Demonio o del grupo de villanos, debut anterior a 1990
-    (especie(VillanoAntiguo, demonio) ; grupo(VillanoAntiguo, villains)),
+    (especie(VillanoAntiguo, demonio) ; grupo(VillanoAntiguo, villano)),
     primera_aparicion(VillanoAntiguo, Anio, _),
     Anio < 1990,
-    
+
     % 4. Validación: Evitar que el mismo personaje ocupe dos puestos
     LiderCapcom \= MutanteElite,
     LiderCapcom \= VillanoAntiguo,

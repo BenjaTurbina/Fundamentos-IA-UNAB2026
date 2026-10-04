@@ -1,85 +1,133 @@
-Preguntas de Marvel vs Capcom
+Preguntas de Marvel vs Capcom 
 
-1.- Que personajes hay?
-	?- findall(Personaje, grupo(Personaje, _), ListaCompleta).
+1.- Que personajes hay? LISTAR TODOS LOS PERSONAJES 
 
-2.- De que franquicia son X personajes?
-	?- franquicia(X, capcom).
-	?- franquicia(X, marvel).
+	?- findall(Personaje, grupo(Personaje, _), ListaCompleta). 
 
-3- De que grupo son X personajes?
-	Que personajes son los perteneciente a los X-MEN
-	?- findall(Personaje, grupo(Personaje, x_men), Lista).
+2.- Que personajes son de marvel 
 
-	Que personajes son los pertenecientes a Street Figther
-	?- findall(Personaje, grupo(Personaje, street_figther), Lista).
+	?- franquicia(X, marvel). 
 
-4.- Que personajes son hombre o mujer o otro
-	Que personajes son mujeres
-	?- findall(P, genero(P, mujer), Mujeres).
+3.- Que personajes son de Capcom 
 
-	Pregunta anidada que personajes son mujer y pertenecen a los X-Men
-		?- findall(P, (genero(P, mujer), grupo(P, x_men)), MujeresXMen).
+	?- franquicia(X, capcom). 
 
-5.- De que raza son X personajes
-	Que personajes son de la raza mutantes y cyborg
-	?- findall(P, (especie(P, mutante), especie(P, cyborg)), Hibridos).
+4- De que grupo son X personajes? 
 
-	Que personajes son puramente extraterrestres
-	?- findall(P, (especie(P, extraterrestre), \+ especie(P, humano)), AliensPuros).
+	Que personajes son los perteneciente a los X-MEN 
+	?- findall(Personaje, grupo(Personaje, x_men), Lista). 
 
-6.- De que nivel son los mutantes del juego?	
-	Que personajes son de nivel mutante Omega
-	?- findall(P, nivel_mutante(P, omega), Omegas).
+	Que personajes son los pertenecientes a Street Figther 
+	?- findall(Personaje, grupo(Personaje, street_figther), Lista). 
 
-	Que personajes son de mutantes Omega y mujeres
-	?- findall(P, (nivel_mutante(P, omega), genero(P, mujer)), MujeresOmegaXMen).
+5.- Que personajes son hombre o mujer o otro 
 
-	Que personajes son de nivel Alpha y de la especie cyborg
-	?- findall(P, (nivel_mutante(P, alpha), especie(P, cyborg)), AlphaCyborgs).
+	Que personajes son mujeres 
+	?- findall(P, genero(P, mujer), Mujeres). 
 
-7.- Que personaje es protagonista de su grupo?
-	Quien es el lider de los X-Men en MvsC2
-	?- personaje_principal(x_men, Lider).
+	Pregunta anidada que personajes son mujer y pertenecen a GRUPO 
+	?- findall(P, (genero(P, mujer), grupo(P, GRUPO)), Lista). 
 
-	Que personajes son los lideres de sus grupos en Marvel
-	?- findall(P, (personaje_principal(Grupo, P), franquicia(P, marvel)), LideresMarvel).
+6.- De que raza son X personajes 
 
-	Que grupo son liderados por mujeres
-	?- findall(Grupo, (personaje_principal(Grupo, P), genero(P, mujer)), GruposLideradosPorMujeres).
+	Que personajes son de la raza mutantes y cyborg 
+	?- findall(P, (especie(P, mutante), especie(P, cyborg)), Hibridos). 
 
-8.- Primera aparacion de los personajes
-	Que personajes aparecieron en la decada de los 80s
-	?- findall(P, (primera_aparicion(P, Anio, _), Anio >= 1980, Anio =< 1989), AparicionEnLosOchenta).
+	Que personajes son puramente extraterrestres 
+	?- findall(P, (especie(P, extraterrestre), \+ especie(P, humano)), AliensPuros). 
 
-	Personajes originales de Street Figther II
-	?- findall(P, primera_aparicion(P, _, 'Street Fighter II'), SF2_Originals).
+7.- De que nivel son los mutantes del juego?	 
 
-9.- De que localidades son los personajes
-	Cuales personajes son de japon?
-	?- findall(P, origen(P, japon), TeamJapon).
-
-	Cuales personaes son de estados unidos?
-	?- findall(P, origen(P, estados_unidos), EEUU).
-
-10.- Detalles de quien desarrola el juego, cuando salio, en que consolas a salido o donde se podia encontrar
-	Quine desarrollo el juego 
-	?- desarrollador(mvc2, Desarrollador)
-
-	En que consolas a salido el juego?
-	?- findall(Plataforma, lanzamiento(mvc2, Plataforma, _), Consolas).
-
-	En que consolas salio originalmente el juego
-	?- findall(Plataforma, lanzamiento(mvc2, Plataforma, 2000), LanzamientoOriginal).
-
-11.- Cuales son los escenarios de pelea que tiene el juego
-
-12.- Que tipos de asistencias tiene los personajes del juego
-
-13.- Que sistemas tiene el competitivo rushdown, zoning
-
-14.- Tier list de los personajes en la salida del juego
+	Que personajes son de nivel mutante Omega 
+	?- findall(P, nivel_mutante(P, omega), Omegas). 
 
 
+	Que personajes son de mutantes Omega y mujeres 
+	?- findall(P, (nivel_mutante(P, omega), genero(P, mujer)), MujeresOmegaXMen). 
+
+	Que personajes son de nivel Alpha y de la especie cyborg 
+	?- findall(P, (nivel_mutante(P, alpha), especie(P, cyborg)), AlphaCyborgs). 
+
+8.- Que personaje es protagonista de su grupo? 
+
+	Quien es el lider de los X-Men en MvsC2 
+	?- personaje_principal(x_men, Lider). 
+
+	Que personajes son los lideres de sus grupos en Marvel 
+	?- findall(P, (personaje_principal(Grupo, P), franquicia(P, marvel)), LideresMarvel). 
+
+	Que grupo son liderados por mujeres 
+	?- findall(Grupo, (personaje_principal(Grupo, P), genero(P, mujer)), GruposLideradosPorMujeres). 
+
+9.- Que personajes aparecieron en la decada de los 80s,90s,2000 
+	?- findall(P, (primera_aparicion(P, Anio, _), Anio >= 1980, Anio =< 1989), AparicionEnLosOchenta). 
+
+10.- De que localidades son los personajes 
+
+	Cuales personajes son de japon? 
+	?- findall(P, origen(P, japon), TeamJapon). 
+
+	Cuales personaes son de estados unidos? 
+	?- findall(P, origen(P, estados_unidos), EEUU). 
+
+11.- Desarrolladora del juego 
+	?- desarrollador(mvc2, Desarrollador) 
+
+12.- Cuales son los escenarios de pelea que tiene el juego 
+	?- findall(Nombre, escenario(_, Nombre), TodosLosMapas). 
+
+
+13.- Que tipos de asistencias tiene los personajes del juego. 
+
+	QUEDA POR HACER LOS HECHOS 
+
+	Proyectil (Projectile). 
+
+	Antiaérea (Anti-Air). 
+
+	Expansión (Expansion). 
+
+	Lanzamiento (Launch). 
+
+	Captura (Capture). 
+
+	Mejora (Enhance). 
+
+	Recuperación de vida (Heal). 
+
+	Variedad (Variety). 
+
+ 
+
+14.- Que estilos de pelea tienen los personajes rushdown, zoning, grappel, all-rounder 
+
+	QUEDA POR HACER LOS HECHOS 
+
+	?- findall(P, estilo(P,rushdown), Lista). 
+
+	?- findall(P, estilo(P,zoning), Lista). 
+	
+	?- findall(P, estilo(P,grappler), Lista). 
+
+	?- findall(P, estilo(P,all_rounder), Lista). 
+
+15.- Tier list de los personajes del juego 
+	?- findall(P, tier(P, S_tier), Lista). 
+
+16.- Con que personaje de ha ganado un EVO	 
+	?- personaje_campeon_evo(X) 
+
+17.-Se puede jugar el juego en esta consola? 
+	?- lanzamiento(mvc2, CONSOLA, _). 
+
+18.- En que consolas salió originalmente el juego (considerando arcade_naomi, dreamcast, playstation_2 y Xbox) 
+	?- findall(Plataforma,(lanzamiento(mvc2, Plataforma, Anio), Anio =< 2002), LanzamientoOriginal). 
+
+19.- Primera aparición de los personajes  	 
+	Personajes originales de Street Figther II (JUEGO O COMIC) 
+	?- findall(P, primera_aparicion(P, _, 'Street Fighter II'), SF2_Originals). 
+
+20.- Quien fue el campeon de la EVO en X año 
+	?- campeon_evo(X, Campeon). 
 
 
